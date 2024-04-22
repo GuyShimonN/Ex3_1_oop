@@ -15,7 +15,7 @@ public abstract class User {
         this.name = name;
         this.id = id;
         this.password = password;
-
+        RegistrationSystem.getInstance().Add_user(this);
         if (RegistrationSystem.isFull) {
             isActive = false;
             System.out.println(name + " with ID " + id + " the registration Completed but the system is full please try later to connect.");

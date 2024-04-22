@@ -1,19 +1,23 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // RegistrationSystem is a singleton class that manages the registration of users and courses.
 public class RegistrationSystem {
     private static RegistrationSystem instance= new RegistrationSystem();
-    private List<User> activeUsers ;
-    private List<Course> courses;
+    private int numOfactiveUsers; ;
+    private List<User>allUsers;
+    private Map<String, Course> courses;
     private final int MAX_ACTIVE = 100;
     public static boolean isFull = false;
 
 
     private RegistrationSystem() {
-        this.activeUsers = new ArrayList<>();
-        this.courses = new ArrayList<>();
-    }
+        this.numOfactiveUsers = numOfactiveUsers;
+        this.allUsers = new ArrayList<>();
+        numOfactiveUsers=0;
+        this.courses = new HashMap<>();    }
 
     public static RegistrationSystem getInstance() {
         if (instance == null) {
@@ -22,16 +26,18 @@ public class RegistrationSystem {
         return instance;
     }
     public void addUser(User user) {
-        if (activeUsers.size() < MAX_ACTIVE) {
-            activeUsers.add(user);
+        if (numOfactiveUsers < MAX_ACTIVE) {
+            numOfactiveUsers++;
         } else {
             System.out.println("The system is full. Please try again later.");
             isFull = true;
         }
     }
     public void removeUser(User user) {
-        activeUsers.remove(user);
-        isFull = false;
+       if (user.getIsActive() ){
+           numOfactiveUsers--;
+           isFull = false;
+       }
     }
 
     public Course[] getCourses() {
@@ -39,19 +45,42 @@ public class RegistrationSystem {
 //        for (Course course : courses) {
 //            System.out.println(course.getName());
 //        }
-        return courses.toArray(new Course[0]);
+        return courses.values().toArray(new Course[0]);
     }
 
     public void addCourse(Course course) {
-        for (Course existingCourse : courses) {
-            if (existingCourse.getName().equals(course.getName())) {
-                System.out.println("A course with this name already exists.");
-                return;
-            }
+        if (courses.containsKey(course.getNumber())) {
+            System.out.println("A course with this number already exists.");
+            return;
         }
-        courses.add(course);
+        courses.put(course.getNumber(), course);
+    }
+    public Course getCourseByNumber(String number) {
+        return courses.get(number);
     }
 
+    public User getUser(long studentId) {
+        for (User user : allUsers) {
+            if (user.getId() == studentId) {
+                return user;
+            }
+        }
+        return null;
+
+    }
+
+    public void Add_user(User user) {
+        allUsers.add(user);
+    }
+    public Student createStudent(String name, Long id, String password) {
+        return new Student(name, id, password);
+    }
+    public Tutor createTutor(String name, Long id, String password) {
+        return new Tutor(name, id, password);
+    }
+    public Lecturer createLecturer(String name, Long id, String password) {
+        return new Lecturer(name, id, password);
+    }
 
     // Other methods for registration system
 }

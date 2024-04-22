@@ -9,7 +9,7 @@ public class Student extends User implements Observer {
 
     @Override
     public void update(String message) {
-        System.out.println("A spot has become available in a course you are interested in.");
+        System.out.println("notification to: "+this.name+" "+message);
     }
     public void registerToCourse(Course course) {
       if (!isActive) {
@@ -28,6 +28,7 @@ public class Student extends User implements Observer {
                 String answer = scanner.nextLine();
                 if (answer.equals("yes")) {
                     course.registerObserver(this);
+                    System.out.println("you get a notification when a spot becomes available.");
                     break;
                 } else if (answer.equals("no")) {
                     break;
@@ -40,11 +41,11 @@ public class Student extends User implements Observer {
         }
         courses.add(course);
         course.addStudent(this);
-        System.out.println("You have successfully registered to " + course.getName());
+        System.out.println(this.name+" have successfully registered to " + course.getName());
     }
     public void unregisterFromCourse(Course course) {
         if (!isActive) {
-            System.out.println("You are not logged in.");
+            System.out.println(this.name+" are not logged in.");
             return;
         }
         if (!courses.contains(course)) {
@@ -74,11 +75,18 @@ public class Student extends User implements Observer {
             System.out.println("You are not logged in.");
             return;
         }
+        if (RegistrationSystem.getInstance().getCourses()!=null) {
+            System.out.println("The courses are listed below:");
 
-        for (Course course : RegistrationSystem.getInstance().getCourses()) {
-            if (course.getNumberOfStudents() < course.getMaxStudents()) {
-                System.out.println(course.getName());
+
+            for (Course course : RegistrationSystem.getInstance().getCourses()) {
+                if (course.getNumberOfStudents() < course.getMaxStudents()) {
+                    System.out.println(course.toString());
+                }
             }
+        }
+        else {
+            System.out.println("There are no courses available.");
         }
     }
     public void listFullCourses() {

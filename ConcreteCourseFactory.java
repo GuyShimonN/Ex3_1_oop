@@ -3,6 +3,14 @@ import java.util.Scanner;
 public class ConcreteCourseFactory implements CourseFactory {
     @Override
     public Course createCourse( String name, String number, Tutor teacher, Lecturer lecturer) {
+        if (RegistrationSystem.getInstance().getCourseByNumber(number) != null) {
+            if (RegistrationSystem.getInstance().getCourseByNumber(number).getName().equals(name)) {
+                System.out.println("the course already exists. if you want to make changes, you can do it in the course menu.");
+                return RegistrationSystem.getInstance().getCourseByNumber(number);
+            } else
+            System.out.println("Course with number " + number + " already exists.");
+            return null;
+        }
         int maxStudents;
         String type;
         Scanner scanner = new Scanner(System.in);
